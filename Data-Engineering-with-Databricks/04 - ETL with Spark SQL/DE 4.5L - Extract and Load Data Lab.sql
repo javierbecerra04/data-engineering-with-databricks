@@ -69,7 +69,11 @@
 -- COMMAND ----------
 
 -- TODO
-<FILL_IN> ${da.paths.datasets}/raw/events-kafka/
+DROP TABLE IF EXISTS events_json;
+CREATE TABLE events_json
+(key binary,offset bigint,partition int,timestamp bigint,topic string,value binary)
+USING JSON
+OPTIONS (PATH = "${da.paths.datasets}/raw/events-kafka/")
 
 -- COMMAND ----------
 
@@ -100,7 +104,8 @@
 -- COMMAND ----------
 
 -- TODO
-<FILL_IN>
+CREATE  OR REPLACE TABLE events_raw
+(key binary,offset bigint,partition int,timestamp bigint,topic string,value binary)
 
 -- COMMAND ----------
 
@@ -129,7 +134,11 @@
 -- COMMAND ----------
 
 -- TODO
-<FILL_IN>
+MERGE INTO events_raw as er
+USING events_json as ej
+ON er.key = ej.key
+WHEN NOT MATCHED
+  THEN INSERT *
 
 -- COMMAND ----------
 
@@ -141,7 +150,7 @@
 -- COMMAND ----------
 
 -- TODO
-<FILL_IN>
+SELECT * FROM events_raw
 
 -- COMMAND ----------
 
@@ -170,7 +179,8 @@
 -- COMMAND ----------
 
 -- TODO
-<FILL_IN> ${da.paths.datasets}/raw/item-lookup
+CREATE TABLE item_lookup AS
+SELECT * FROM parquet.`${da.paths.datasets}/raw/item-lookup`
 
 -- COMMAND ----------
 
