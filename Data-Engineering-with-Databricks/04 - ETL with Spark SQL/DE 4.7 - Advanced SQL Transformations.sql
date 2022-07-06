@@ -165,6 +165,11 @@ FROM events
 
 -- COMMAND ----------
 
+SELECT user_id, event_timestamp, event_name, items 
+FROM events
+
+-- COMMAND ----------
+
 -- MAGIC %md
 -- MAGIC 
 -- MAGIC  
